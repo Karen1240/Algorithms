@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: "com.github.sherter.google-java-format"
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 mainClassName = findProperty("main") ?: "com.williamfiset.algorithms.${findProperty("algorithm") ?: 'missingPackage.missingClass'}"
 
@@ -15,7 +16,17 @@ buildscript {
     classpath "gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.8"
   }
 }
-
+dependencies {
+  codeCoverage files("${rootProject.projectDir.path}/lib/jacocoagent.jar")
+}
+ 
+test {
+  jvmArgs "-javaagent:${configurations.codeCoverage.singleFile}=destfile=${buildDirName}/coverage-results/jacoco.exec,sessionid=HSServ,append=false",
+    'Djacoco=true',
+    '-Xms128m',
+    '-Xmx512m',
+    '-XX:MaxPermSize=128m'
+}
 // Require Java 8
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -83,5 +94,37 @@ sonarqube {
     property "sonar.projectKey", "Karen1240_Algorithms"
     property "sonar.organization", "karen1240"
     property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+task generateCoverageReport << {
+  ant {
+    taskdef(name:'jacocoreport', classname: 'org.jacoco.ant.ReportTask') {
+      classpath path: "${rootProject.projectDir.path}/lib/jacocoant.jar"
+    }
+       
+    mkdir dir: "${buildDirName}/reports/coverage"
+       
+    jacocoreport {
+      executiondata {
+        fileset(dir: "${buildDirName}/coverage-results") {
+          ant.file file: 'jacoco.exec'
+        }
+      }
+           
+      structure(name: project.name) {
+               
+        classfiles {
+          fileset dir: "${project.buildDir.path}/classes/main"
+        }
+        
+        // this is for Windows
+        sourcefiles(encoding: 'CP1252') {
+          fileset dir: "${project.projectDir.path}/src/main/java"
+        }
+      }
+           
+      xml  destfile: "${buildDirName}/reports/coverage/jacoco.xml"
+      html destdir: "${buildDirName}/reports/coverage"
+    }
   }
 }
