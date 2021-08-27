@@ -35,7 +35,7 @@ addons:
 
 env:
   global:
-    CC_TEST_REPORTER_ID=ABC123
+    CC_TEST_REPORTER_ID=e934329353e09ab094601a3d5e98624fdd1bd8d6658f5752b97d0976c589483e
 
 before_install:                        # Install node version from .nvmrc
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
