@@ -1,6 +1,7 @@
 language: java
 install: skip
 
+dist: trusty
 
 jdk:
   - oraclejdk8
@@ -14,4 +15,3 @@ addons:
 
 script:
   - ./gradlew build
-
