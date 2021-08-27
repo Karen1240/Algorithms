@@ -14,7 +14,8 @@ addons:
 script:
   - ./gradlew build
   
-sudo: true
+sudo: false
+
 filter_secrets: false
 
 before_install:
