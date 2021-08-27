@@ -1,6 +1,7 @@
 language: java
 
 
+
 dist: trusty
 
 jdk:
@@ -13,8 +14,10 @@ addons:
 
 script:
   - ./gradlew build
+  - npm run lint
+  - npm run test:coveralls
   
-sudo: false
+sudo: true
 
 filter_secrets: false
 
