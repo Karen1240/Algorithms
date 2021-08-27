@@ -6,8 +6,6 @@ dist: trusty
 jdk:
   - oraclejdk8
 
-sudo: false
-
 addons:
   apt:
     packages:
@@ -16,46 +14,65 @@ addons:
 script:
   - ./gradlew build
   
-  
-  # Cache gems
+sudo: true
+filter_secrets: false
+
+before_install:
+  - 'curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"'
+  - 'unzip awscli-bundle.zip'
+  - './awscli-bundle/install -b ~/bin/aws'
+  - 'export PATH=~/bin:$PATH'
+  - gem update --system
+  - gem install bundler -v 1.16.1
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+before_script:
+  - bin/setup
+  - ./cc-test-reporter before-build
+
+script:
+  - "bundle exec rake knapsack:rspec"
+  - "bundle exec rake assets:precompile"
+
+branches:
+  only:
+    - develop
+    - master
+
 cache:
   bundler: true
+  yarn: true
   directories:
     - node_modules
 
-addons:
-  chrome: stable
-  #firefox: latest
-
 env:
   global:
-    CC_TEST_REPORTER_ID=ABC123
+    - CC_TEST_REPORTER_ID=id
+    - CI_NODE_TOTAL=5
+    - AWS_ACCESS_KEY_ID=foo
+    - AWS_SECRET_ACCESS_KEY=bar
+    - AWS_DEFAULT_REGION=us-east-1
+  matrix:
+    - CI_NODE_INDEX=0
+    - CI_NODE_INDEX=1
+    - CI_NODE_INDEX=2
+    - CI_NODE_INDEX=3
+    - CI_NODE_INDEX=4
 
-before_install:
-  - npm install                         # Install node version from .nvmrc
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  #- export DISPLAY=:99.0                # Display number for xvfb (for headless browser testing)
-  #- sh -e /etc/init.d/xvfb start        # Start xvfb (for headless browser testing)
+addons:
+    postgresql: "9.6"
+    elasticsearch: "5.x"
+    chrome: stable
 
-install:
-  - bundle install --without production --path=${BUNDLE_PATH:-vendor/bundle}  # Install ruby gems, excluding production only gems such as unicorn (already present by default in Travis)
-  - npm install                         # Install npm dependencies
-  #- npm install karma-firefox-launcher codeclimate-test-reporter
-
-# Setup the database
-before_script: bundle exec rake db:create db:migrate
-
-# Run the test suites
-script:
-  - bundle exec rubocop -DESP           # Backend linting
-  - bundle exec rake                    # Backend specs
-  #- npm test -- --browsers Firefox      # Frontend specs
-  - npm test                            # Frontend linting & specs
+services:
+  - postgresql
+  - redis-server
+  - elasticsearch
 
 # Pipe the coverage data to Code Climate
 after_script:
-  - ./cc-test-reporter format-coverage -t simplecov -o coverage/codeclimate.backend.json coverage/backend/.resultset.json # Format backend coverage
-  - ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.frontend.json coverage/frontend/lcov.info  # Format frontend coverage
-  - ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2                  # Sum both coverage parts into coverage/codeclimate.json
-  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi  # Upload coverage/codeclimate.json
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter format-coverage -t simplecov -o ./coverage/codeclimate.$CI_NODE_INDEX.json ./coverage/spec/.resultset.json; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync coverage/ "s3://s3-bucket/coverage/$TRAVIS_BUILD_NUMBER"; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync "s3://s3-bucket/coverage/$TRAVIS_BUILD_NUMBER" coverage/; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter sum-coverage --output - --parts $CI_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --input -; fi
