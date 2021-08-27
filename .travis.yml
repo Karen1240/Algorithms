@@ -20,7 +20,6 @@ addons:
 script:
   - ./gradlew build
   - ./gradlew test
-  - coverage xml
 
 ################ CODE CLIMATE #########################3
 # Cache gems
