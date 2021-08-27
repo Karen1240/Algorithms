@@ -1,16 +1,21 @@
+apply plugin: 'java'
 apply plugin: "com.github.sherter.google-java-format"
 apply plugin: 'application'
 apply plugin: 'jacoco'
-apply plugin: 'org.sonarqube'
  
 
 mainClassName = findProperty("main") ?: "com.williamfiset.algorithms.${findProperty("algorithm") ?: 'missingPackage.missingClass'}"
 
-@@ -15,9 +15,14 @@ buildscript {
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
   dependencies {
     // https://github.com/sherter/google-java-format-gradle-plugin
     classpath "gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.8"
-    classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+    classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
     //implementation 'com.google.guava:guava:29.0-jre'
     //testImplementation 'junit:junit:4.13.1'
 
@@ -21,7 +26,9 @@ apply plugin: 'org.sonarqube'
 // Require Java 8
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-@@ -27,6 +32,8 @@ repositories {
+
+repositories {
+  mavenLocal()
   mavenCentral()
 }
 
@@ -30,16 +37,65 @@ targetCompatibility = 1.8
 // Describe all project deps. Use 'testCompile' for test dependencies and
 // 'compile' for project dependencies.
 dependencies {
-@@ -84,4 +91,19 @@ jacocoTestReport {
+  // Apache commons lang
+  testCompile 'org.apache.commons:commons-lang3:3.6'
+
+  // JUnit framework
+  testCompile 'junit:junit:4.+'
+
+  // JUnit 5 / Jupiter
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2')
+   
+  // Google Guava lib
+  testCompile group: 'com.google.guava', name: 'guava', version: '22.0'
+
+  // Google Truth test framework
+  // https://mvnrepository.com/artifact/com.google.truth/truth
+  testCompile group: 'com.google.truth', name: 'truth', version: '1.0'
+
+  // Test mocking framework
+  testCompile "org.mockito:mockito-core:1.+"
+}
+
+test {
+  dependsOn cleanTest
+  testLogging.showStandardStreams = true
+}
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += [
+    '-Xlint:unchecked',
+    '-Xlint:deprecation'
+  ]
+}
+
+// Options when compiling tests
+compileTestJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += [
+    '-Xlint:unchecked',
+    '-Xlint:deprecation'
+  ]
+}
+
+task buildDependenciesFolder(type: Copy) {
+  from configurations.compile
+  into './dependencies'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 }
 
-check.dependsOn jacocoTestReport 
 check.dependsOn jacocoTestReport
 
 //systemProp.sonar.host.url=http://localhost:9000
 
-sonarqube {
+/*sonarqube {
     properties {
         property 'sonar.host.url', 'http://localhost:9000'
         // Insert other SonarQube properties here
@@ -47,7 +103,6 @@ sonarqube {
         property 'sonar.projectKey', 'org.sonarqube.gradle-multi-module-jacoco'
     }
 }
-
 tasks.named('sonarqube').configure {
     dependsOn test
-} 
+}*/
