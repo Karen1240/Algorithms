@@ -38,7 +38,7 @@ addons:
 env:
   global:
     CC_TEST_REPORTER_ID= $CC_TEST_REPORTER_ID
-    JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./testReports/jacocoTestReport.xml --input-type jacoco
+    #JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./testReports/jacocoTestReport.xml --input-type jacoco
 
 #after_script:
 #  - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
