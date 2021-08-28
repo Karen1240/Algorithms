@@ -1,4 +1,4 @@
-
+/*
 plugins {
     id "org.sonarqube" version "2.7.1"
 }
@@ -19,9 +19,9 @@ sonarqube {
         property "sonar.projectName", "Java Gradle-based project analyzed on SonarCloud using Travis"
         property "sonar.projectKey", "com.sonarqube.examples.java-gradle-travis-project"
     }
-}
+}*/
 ----------------------------------------------
-/*apply plugin: 'java'
+apply plugin: 'java'
 apply plugin: "com.github.sherter.google-java-format"
 apply plugin: 'application'
 apply plugin: 'jacoco'
@@ -133,4 +133,4 @@ sonarqube {
 tasks.named('sonarqube').configure {
     dependsOn test
 }
-*/
+
