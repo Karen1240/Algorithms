@@ -24,6 +24,15 @@ script:
   
 #- ./gradlew clean build jacocoTestReportDebug
 
+ # Cache gems
+cache:
+  bundler: true
+  directories:
+    - node_modules
+
+addons:
+  chrome: stable
+  #firefox: latest
 
 ################ CODE CLIMATE #########################
 
@@ -53,15 +62,6 @@ after_script:
 after_success:
   - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
 
- # Cache gems
-cache:
-  bundler: true
-  directories:
-    - node_modules
-
-addons:
-  chrome: stable
-  #firefox: latest
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
