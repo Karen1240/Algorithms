@@ -18,7 +18,7 @@ addons:
 
 before_script:
   - ./cc-test-reporter before-build
-  - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+  - ./cc-test-reporter upload-coverage -r e934329353e09ab094601a3d5e98624fdd1bd8d6658f5752b97d0976c589483e
   
 script:
   - ./gradlew build
@@ -26,7 +26,7 @@ script:
   - ./gradlew clean build jacocoTestReport
 
 
-################ CODE CLIMATE #########################3
+################ CODE CLIMATE #########################
 # Cache gems
 cache:
   bundler: true
