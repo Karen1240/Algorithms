@@ -17,6 +17,8 @@ addons:
       - oracle-java8-installer
 
 before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   //- ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
   
@@ -42,9 +44,8 @@ env:
     CC_TEST_REPORTER_ID=e934329353e09ab094601a3d5e98624fdd1bd8d6658f5752b97d0976c589483e
     JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
 
-before_install:                       
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
+//before_install:                       
+
 
 
 # Pipe the coverage data to Code Climate
