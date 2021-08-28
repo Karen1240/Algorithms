@@ -41,7 +41,7 @@ env:
     JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./testReports/jacocoTestReport.xml --input-type jacoco
 
 after_script:
-  - ./cc-test-reporter upload-coverage $CC_TEST_REPORTER_ID
+  - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 
