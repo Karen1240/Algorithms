@@ -4,7 +4,7 @@ language: java
 dist: trusty
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
   
 sudo: false
@@ -12,7 +12,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+      - open-java8-installer
 
 #before_script:
 #
