@@ -18,13 +18,13 @@ addons:
 
 before_script:
   - ./cc-test-reporter before-build
-  - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml
-  --input-type jacoco 
-  - ./cc-test-reporter upload-coverage
+  - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
   
 script:
   - ./gradlew build
   - ./gradlew test
+  - ./gradlew clean build jacocoTestReport
+
 
 ################ CODE CLIMATE #########################3
 # Cache gems
@@ -40,7 +40,8 @@ addons:
 env:
   global:
     CC_TEST_REPORTER_ID=e934329353e09ab094601a3d5e98624fdd1bd8d6658f5752b97d0976c589483e
-    JACOCO_SOURCE_PATH=src/main/java 
+    JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
+
 before_install:                       
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
