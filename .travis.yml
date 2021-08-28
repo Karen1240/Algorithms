@@ -19,7 +19,8 @@ addons:
 before_script:
   - ./cc-test-reporter before-build
   - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml
-  --input-type jacoco ./cc-test-reporter upload-coverage
+  --input-type jacoco 
+  - ./cc-test-reporter upload-coverage
   
 script:
   - ./gradlew build
