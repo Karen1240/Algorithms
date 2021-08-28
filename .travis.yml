@@ -57,7 +57,7 @@ after_script:
   #- ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2                  # Sum both coverage parts into coverage/codeclimate.json
   #- if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi  # Upload coverage/codeclimate.json
   #- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-  - ./cc-test-reporter after-build -d -t jacoco -e "https://api.codeclimate.com/v1/test_reports"
+  - ./cc-test-reporter after-build -d -t jacoco -e https://api.codeclimate.com/v1/test_reports
 
 
 
