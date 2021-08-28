@@ -34,18 +34,21 @@ env:
     CC_TEST_REPORTER_ID= $CC_TEST_REPORTER_ID
     //JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
 
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
 //before_install:                       
 
 
 
 # Pipe the coverage data to Code Climate
-after_script:
+/*after_script:
   - ./cc-test-reporter format-coverage -t simplecov -o coverage/codeclimate.backend.json coverage/backend/.resultset.json # Format backend coverage
   - ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.frontend.json coverage/frontend/lcov.info  # Format frontend coverage
   - ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2                  # Sum both coverage parts into coverage/codeclimate.json
   - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi  # Upload coverage/codeclimate.json
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-
+*/
 /*after_success:
   - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
 
