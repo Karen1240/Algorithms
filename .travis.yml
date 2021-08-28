@@ -16,7 +16,7 @@ addons:
     packages:
       - oracle-java8-installer
 
-berfore_script:
+before_script:
   - ./cc-test-reporter before-build
   - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml
   --input-type jacoco ./cc-test-reporter upload-coverage
