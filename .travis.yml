@@ -18,7 +18,7 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  //- ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+  
   
 script:
   - ./gradlew build
@@ -31,10 +31,12 @@ script:
 env:
   global:
     CC_TEST_REPORTER_ID= $CC_TEST_REPORTER_ID
-    //JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
+    JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage ./build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
 
 after_script:
+  - ./cc-test-reporter upload-coverage $CC_TEST_REPORTER_ID
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
 
 //before_install:                       
 
