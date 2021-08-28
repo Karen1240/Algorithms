@@ -18,6 +18,7 @@ addons:
 #
   
 script:
+  - ./gradlew googleJavaFormat
   - ./gradlew build
   - ./gradlew test
   
