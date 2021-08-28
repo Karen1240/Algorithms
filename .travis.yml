@@ -16,8 +16,6 @@ addons:
 
 #before_script:
 #
-
-  
   
 script:
   - ./gradlew build
