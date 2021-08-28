@@ -23,7 +23,8 @@ before_script:
 script:
   - ./gradlew build
   - ./gradlew test
-  #- ./gradlew clean build jacocoTestReportDebug
+  
+#- ./gradlew clean build jacocoTestReportDebug
 
 
 ################ CODE CLIMATE #########################
