@@ -49,8 +49,8 @@ after_script:
   - ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2                  # Sum both coverage parts into coverage/codeclimate.json
   - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi  # Upload coverage/codeclimate.json
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-*/
-/*after_success:
+
+after_success:
   - ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
 
  # Cache gems
@@ -65,4 +65,4 @@ addons:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  */
+*/
