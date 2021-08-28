@@ -21,8 +21,7 @@ script:
   - ./gradlew googleJavaFormat
   - ./gradlew build
   - ./gradlew test
-  
-#- ./gradlew clean build jacocoTestReportDebug
+  - ./gradlew clean build jacocoTestReportDebug
 
  # Cache gems
 cache:
